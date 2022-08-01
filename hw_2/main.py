@@ -44,7 +44,7 @@ def fix_phones(contacts_list):
     return contacts_list_upd
 
 # Объединияем все дублирующиеся записи о человеке в одну.
-def merge_double_recordes(contacts_list):
+def merge_doubles(contacts_list):
     contacts_to_del = []    
     for contact in contacts_list:
         pattern = ', '.join([contact[0], (contact[1])])
@@ -77,5 +77,5 @@ if __name__ == '__main__':
     address_book = read_file('phonebook_raw.csv')
     address_book = fix_initials(address_book)
     address_book = fix_phones(address_book)
-    address_book = merge_double_recordes(address_book)
+    address_book = merge_doubles(address_book)
     write_to_file(address_book)
