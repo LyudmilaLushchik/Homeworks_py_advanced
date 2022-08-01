@@ -45,10 +45,11 @@ def fix_phones(contacts_list):
 
 # Объединияем все дублирующиеся записи о человеке в одну.
 def merge_double_recordes(contacts_list):
-    contacts_list_upd = []    
+    contacts_to_del = []    
     for contact in contacts_list:
-        pattern = ', '.join([contact[0], (contact[1])])        
-        for element in contacts_list:
+        pattern = ', '.join([contact[0], (contact[1])])
+        start_slice = contacts_list.index(contact) + 1 
+        for element in contacts_list[start_slice:]:
             full_name = ', '.join([element[0], (element[1])])
             result = re.search(pattern, full_name)
             if result is not None:
@@ -61,11 +62,10 @@ def merge_double_recordes(contacts_list):
                 if contact[5] == '':
                     contact[5] = element[5]
                 if contact[6] == '':
-                    contact[6] = element[6]            
-    for contact in contacts_list:
-        if contact not in contacts_list_upd:
-            contacts_list_upd.append(contact)                
-    return contacts_list_upd
+                    contact[6] = element[6]
+                contacts_to_del.append(element)
+    contacts = [contact for contact in contacts_list if contact not in contacts_to_del]
+    return contacts
 
 # Сохраняем получившиеся данные в другой файл.
 def write_to_file(contacts_list):
