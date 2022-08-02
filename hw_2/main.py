@@ -9,41 +9,33 @@ def read_file(file_name):
         contacts = list(rows)
     return contacts
 
-# Помещаем Фамилию, Имя и Отчество человека в поля lastname, firstname и surname соответственно.
-def fix_initials(contacts_list):
-    contacts_list_upd =[]
+# Помещаем Фамилию, Имя и Отчество человека 
+# в поля lastname, firstname и surname соответственно.
+def fix_initials(contacts_list):    
+    contacts_list_upd =[]    
     for contact in contacts_list:
         pattern = r'[\s,]'
-        item_list = []
-        for item in contact[:3]:
-            result = re.split(pattern, item)
-            item_list.extend(result)
-            del(item_list[3:])
-        del(contact[:3])
-        item_list.extend(contact)
-        contacts_list_upd.append(item_list)
-    return contacts_list_upd
-
-# Приводим все телефоны в формат +7(999)999-99-99/ +7(999)999-99-99 доб.9999
-def fix_phones(contacts_list):
-    contacts_list_upd = []
-    for contact in contacts_list:
-        pattern_1 = r'(\+7|8)?\s*\(?(\d{3})\)?\s*(\d{3})\-*(\d+)\-*(\d+)\s?\(?[доб\.\s]+(\d{4})?\)?'
-        pattern_2 = r'(\+7|8)?\s*\(?(\d{3})\)?\-?\s*(\d{3})\-?(\d{2})\-?(\d+)'
-        
-        phone_exist_1 = re.search(pattern_1, contact[-2])    
-        phone_exist_2 = re.search(pattern_2, contact[-2])    
-        if phone_exist_1 is not None:
-            result = re.sub(pattern_1, r'+7(\2)\3-\4-\5 доб.\6', contact[-2])
-            contact[-2] = result
-        elif phone_exist_2 is not None:
-            result = re.sub(pattern_2, r'+7(\2)\3-\4-\5', contact[-2])
-            contact[-2] = result
-        
+        full_name = (re.split(pattern, ' '.join(contact[:3])))[:3]
+        info = contact[3:]
+        contact = full_name + info
         contacts_list_upd.append(contact)
     return contacts_list_upd
 
-# Объединияем все дублирующиеся записи о человеке в одну.
+# Приводим все телефоны в формат:
+# +7(999)999-99-99/ +7(999)999-99-99 доб.9999
+def fix_phones(contacts_list):
+    contacts_list_upd = []
+    for contact in contacts_list:
+        pattern = r'(\+7|8)?\s*\(?(\d{3})\)?\-?\s*(\d{3})\-?'\
+                r'(\d{2})\-?(\d+)(\s*)\(*([доб.]*)?\s*(\d{4})?\)*'
+        phone_exist = re.search(pattern, contact[-2])    
+        if phone_exist is not None:
+            result = re.sub(pattern, r'+7(\2)\3-\4-\5\6\7\8', contact[-2])
+            contact[-2] = result
+        contacts_list_upd.append(contact)
+    return contacts_list_upd
+
+# Объединяем все дублирующиеся записи о человеке в одну.
 def merge_doubles(contacts_list):
     contacts_to_del = []    
     for contact in contacts_list:
@@ -64,8 +56,8 @@ def merge_doubles(contacts_list):
                 if contact[6] == '':
                     contact[6] = element[6]
                 contacts_to_del.append(element)
-    contacts = [contact for contact in contacts_list if contact not in contacts_to_del]
-    return contacts
+    contacts_list_upd = [contact for contact in contacts_list if contact not in contacts_to_del]
+    return contacts_list_upd
 
 # Сохраняем получившиеся данные в другой файл.
 def write_to_file(contacts_list):
