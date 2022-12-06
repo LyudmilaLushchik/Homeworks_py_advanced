@@ -107,11 +107,11 @@ def show_all_docs_info():
         show_document_info(current_document)
 
 
-def add_new_doc(new_doc_number, new_doc_type, new_doc_owner_name, new_doc_shelf_number):
-    # new_doc_number = input('Введите номер документа - ')
-    # new_doc_type = input('Введите тип документа - ')
-    # new_doc_owner_name = input('Введите имя владельца документа- ')
-    # new_doc_shelf_number = input('Введите номер полки для хранения - ')
+def add_new_doc():
+    new_doc_number = input('Введите номер документа - ')
+    new_doc_type = input('Введите тип документа - ')
+    new_doc_owner_name = input('Введите имя владельца документа- ')
+    new_doc_shelf_number = input('Введите номер полки для хранения - ')
     new_doc = {
         "type": new_doc_type,
         "number": new_doc_number,
@@ -155,11 +155,7 @@ def secretary_program_start():
             print('Документ находится на полке номер {}'.format(directory_number))
         elif user_command == 'a':
             print('Добавление нового документа:')
-            new_doc_number = ''
-            new_doc_type = ''
-            new_doc_owner_name = ''
-            new_doc_shelf_number = ''
-            new_doc_shelf_number = add_new_doc(new_doc_number, new_doc_type, new_doc_owner_name, new_doc_shelf_number)
+            new_doc_shelf_number = add_new_doc()
             print('\nНа полку "{}" добавлен новый документ:'.format(new_doc_shelf_number))
         elif user_command == 'd':
             doc_number, deleted = delete_doc()

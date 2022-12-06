@@ -34,11 +34,11 @@ class TestFunctions(unittest.TestCase):
         with mock.patch('builtins.input', return_value = number):
             result = get_doc_shelf()
             self.assertEqual(result, fixt_result)
-
+    
     @parameterized.expand(fixture_add_new_doc)
     def test_add_new_doc(self, new_doc_number, new_doc_type, new_doc_owner_name, new_doc_shelf_number, fixt_result):
-        with mock.patch('builtins.input', return_value = new_doc_shelf_number):
-            self.assertEqual(add_new_doc(new_doc_number, new_doc_type, new_doc_owner_name, new_doc_shelf_number), fixt_result)
+        with mock.patch('builtins.input', side_effect = [new_doc_number, new_doc_type, new_doc_owner_name, new_doc_shelf_number]):
+            self.assertEqual(add_new_doc(), fixt_result)
 
     @parameterized.expand(fixture_delete_doc)
     def test_delete_doc(self, doc_number, fixt_result):
